@@ -1,12 +1,26 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import { ArrowRight, QrCode, Palette, BarChart3, ShieldCheck } from "lucide-react";
+import { ArrowRight, QrCode, Download, FileText, ShieldCheck } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { QrCreator } from "@/components/qr-creator";
 
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "QRForge — Create and Export QR Codes" },
+      { name: "description", content: "Create static QR codes for websites and text with QRForge. Download PNG and SVG files directly in your browser, with no account required." },
+      { property: "og:title", content: "QRForge — Create and Export QR Codes" },
+      { property: "og:description", content: "Create website and text QR codes and export them as PNG or SVG. No account required." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Landing,
 });
 
 function Landing() {
+  const [creatorOpen, setCreatorOpen] = useState(false);
   return (
     <div className="min-h-screen">
       <header className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
@@ -19,15 +33,9 @@ function Landing() {
           </span>
         </div>
         <nav className="flex items-center gap-3">
-          <a href="#" className="hidden text-sm text-muted-foreground hover:text-foreground sm:inline">
-            Sign In
-          </a>
-          <a
-            href="#"
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-xs font-semibold tracking-wider uppercase text-primary-foreground transition hover:brightness-110"
-          >
+          <Button onClick={() => setCreatorOpen(true)} className="text-xs font-semibold uppercase">
             Get Started <ArrowRight className="h-3.5 w-3.5" />
-          </a>
+          </Button>
         </nav>
       </header>
 
@@ -37,63 +45,54 @@ function Landing() {
             <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
             Unified QR Platform
           </div>
-          <h1 className="mt-6 text-5xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl">
+          <h1 className="mt-6 text-4xl font-extrabold sm:text-6xl lg:text-7xl">
             One QR.<br />
             <span className="text-primary">Every Destination.</span>
           </h1>
           <p className="mt-6 max-w-xl font-mono text-sm leading-relaxed text-muted-foreground sm:text-base">
-            Design, customize and manage QR codes for URLs, Wi-Fi, UPI payments,
-            WhatsApp, business cards and more — all from a single, elegant dashboard.
+            Create QR codes for websites and text, then download print-ready
+            PNG and SVG files — all right in your browser.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <a
-              href="#"
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 font-mono-caps text-xs font-semibold text-primary-foreground transition hover:brightness-110"
-            >
-              Create Free Account <ArrowRight className="h-4 w-4" />
-            </a>
-            <a
-              href="#"
-              className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-5 py-3 font-mono-caps text-xs font-semibold text-foreground transition hover:border-primary/50"
-            >
-              I already have an account
-            </a>
+            <Button size="lg" onClick={() => setCreatorOpen(true)} className="font-mono-caps text-xs font-semibold">
+              Create QR Code <ArrowRight className="h-4 w-4" />
+            </Button>
           </div>
 
           <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 font-mono-caps text-[11px] text-muted-foreground">
-            <span>· 8 QR Types</span>
+            <span>· Website + Text</span>
             <span>· PNG + SVG Export</span>
-            <span>· No Signup Fee</span>
+            <span>· No Account Needed</span>
           </div>
         </div>
 
         <div className="rounded-2xl border border-border bg-card/60 p-6 backdrop-blur">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <div className="font-mono-caps text-[11px] text-muted-foreground">Preview</div>
-              <div className="mt-1 text-lg font-semibold">Coffee Menu · QR-042</div>
+              <div className="mt-1 text-lg font-semibold">QRForge · Website QR</div>
             </div>
             <div className="inline-flex items-center gap-1.5 font-mono-caps text-[11px] text-primary">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-              Live
+              Sample
             </div>
           </div>
 
-          <div className="mt-5 flex items-center justify-center rounded-xl bg-white p-8">
+          <div className="mt-5 flex items-center justify-center rounded-lg bg-qr-paper p-5">
             <QRCodeSVG
-              value="https://qrforge.app/coffee-menu"
+              value="https://smart-qr-charm.lovable.app"
               size={260}
               level="H"
-              marginSize={0}
+              marginSize={4}
+              className="h-auto w-full max-w-[260px]"
             />
           </div>
 
           <div className="mt-5 grid grid-cols-3 gap-3">
             {[
-              { k: "Scans", v: "1,284" },
+              { k: "Format", v: "SVG" },
               { k: "Type", v: "URL" },
-              { k: "Uptime", v: "99.9%" },
+              { k: "Mode", v: "Static" },
             ].map((s) => (
               <div key={s.k} className="rounded-lg border border-border bg-background/60 px-3 py-2.5">
                 <div className="font-mono-caps text-[10px] text-muted-foreground">{s.k}</div>
@@ -112,9 +111,9 @@ function Landing() {
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { icon: QrCode, title: "Static + Dynamic", body: "Generate scannable QR codes for URLs, WiFi, UPI, WhatsApp, SMS and more." },
-            { icon: Palette, title: "Custom Styling", body: "Adjust colors, size and error correction — keep it brand-perfect and scannable." },
-            { icon: BarChart3, title: "Scan Analytics", body: "Track scan counts and monitor which QR codes are performing best." },
+            { icon: QrCode, title: "Website QR Codes", body: "Create a static QR code for a website address." },
+            { icon: FileText, title: "Text QR Codes", body: "Turn a message or other text into a scannable QR code." },
+            { icon: Download, title: "PNG + SVG Export", body: "Download your QR code in three PNG sizes or as a scalable SVG." },
             { icon: ShieldCheck, title: "Client-Side Secure", body: "Everything stays in your browser — no server round-trips, no leaks." },
           ].map((f) => (
             <div
@@ -138,14 +137,11 @@ function Landing() {
               <QrCode className="h-5 w-5" />
             </div>
             <h3 className="mt-4 text-2xl font-bold">Ready to forge your first QR?</h3>
-            <p className="mt-1 text-sm text-muted-foreground">Sign up in under 10 seconds — no credit card required.</p>
+            <p className="mt-1 text-sm text-muted-foreground">No account or credit card required.</p>
           </div>
-          <a
-            href="#"
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 font-mono-caps text-xs font-semibold text-primary-foreground transition hover:brightness-110"
-          >
+          <Button size="lg" onClick={() => setCreatorOpen(true)} className="font-mono-caps text-xs font-semibold">
             Start Free <ArrowRight className="h-4 w-4" />
-          </a>
+          </Button>
         </div>
       </section>
 
@@ -155,6 +151,7 @@ function Landing() {
           <span>Built with care</span>
         </div>
       </footer>
+      <QrCreator open={creatorOpen} onOpenChange={setCreatorOpen} />
     </div>
   );
 }

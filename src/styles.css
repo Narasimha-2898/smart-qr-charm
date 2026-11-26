@@ -1,6 +1,6 @@
 @import "tailwindcss" source(none);
-@source "../src";
 @import "tw-animate-css";
+@source "../src";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -28,6 +28,7 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-qr-paper: var(--qr-paper);
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
@@ -53,6 +54,8 @@
   --border: oklch(0.28 0.03 160);
   --input: oklch(0.24 0.03 160);
   --ring: oklch(0.83 0.24 148);
+  --qr-paper: oklch(1 0 0);
+  --page-glow: oklch(0.35 0.18 148 / 0.12);
 }
 
 .dark {
@@ -72,8 +75,7 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     background-image:
-      radial-gradient(ellipse 80% 50% at 90% 10%, oklch(0.35 0.18 148 / 0.18), transparent 60%),
-      radial-gradient(ellipse 60% 40% at 10% 90%, oklch(0.35 0.18 148 / 0.10), transparent 60%);
+      radial-gradient(ellipse 80% 50% at 90% 10%, var(--page-glow), transparent 60%);
     background-attachment: fixed;
   }
 }
@@ -81,5 +83,14 @@
 @utility font-mono-caps {
   font-family: var(--font-mono);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0;
+}
+
+.qr-output { background: var(--qr-paper); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

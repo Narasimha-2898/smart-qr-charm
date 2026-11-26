@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Enable static prerendering and repository subpaths only when `GITHUB_PAGES=true`; ordinary deployments require the hosted server and root paths.
+- Use the shared client-side QR creator for creation buttons; QR generation and exports need no accounts or server storage.
